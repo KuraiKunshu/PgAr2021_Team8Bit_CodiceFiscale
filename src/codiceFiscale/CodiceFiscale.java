@@ -7,7 +7,9 @@ public class CodiceFiscale {
     private String codice;
     private boolean valido;
     private final char[] arrayCodiceMese={'A','B','C','D','E','H','L','M','P','R','S','T'};
-    private final char[] Resto={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private final char[] resto={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private final char[] consonanti={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'};
+    private final char[] vocali={'A','E','I','O','U'};
     private final Map<Character, Integer> arrayCaratteriAlfanumericiDispari=Map.ofEntries(
             new AbstractMap.SimpleEntry<>('0',1),
             new AbstractMap.SimpleEntry<>('1',0),
@@ -111,6 +113,7 @@ public class CodiceFiscale {
         this.valido = valido;
     }
     public String generaNomeCF(String nome){
+        String nomeCF;
         return null;
     }
     public String generaCognomeCF(String cognome){
