@@ -104,10 +104,28 @@ public class CodiceFiscale {
     public void setCodice(String codice) {
         this.codice = codice;
     }
-
-    public boolean isValido() {
-        return valido;
+    public boolean isVocale(char lettera) {
+    	for(int i = 0; i<5;i++) {
+    		if(lettera == vocali[i]) {
+    			return true;
+    		}	
+    	}
+    	return false;
     }
+   /* public boolean isValido(String codice) {
+       char[] codiceFiscale = codice.toCharArray();
+       for(int i=0; i<16; i++) {
+    	   if(i==0) {
+              if(isVocale(codiceFiscale[0])) {
+            	  return false;
+              }
+    	   }
+           if((i>0)&&(i<3)) {
+        	   
+           }
+       }  
+     }*/
+       
 
     public void setValido(boolean valido) {
         this.valido = valido;
