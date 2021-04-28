@@ -5,8 +5,6 @@ import java.util.Map;
 
 public class CodiceFiscale {
     private String codice;
-    private boolean valido;
-    private final char[] arrayCodiceMese={'A','B','C','D','E','H','L','M','P','R','S','T'};
     private final char[] resto={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     private final char[] consonanti={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'};
     private final char[] vocali={'A','E','I','O','U'};
@@ -87,7 +85,23 @@ public class CodiceFiscale {
             new AbstractMap.SimpleEntry<>('Y',24),
             new AbstractMap.SimpleEntry<>('Z',25)
     );
-
+    private final Map<Character, Integer> arrayMesi =Map.ofEntries(
+    		  new AbstractMap.SimpleEntry<>('A',31),
+              new AbstractMap.SimpleEntry<>('B',28),
+              new AbstractMap.SimpleEntry<>('C',31),
+              new AbstractMap.SimpleEntry<>('D',30),
+              new AbstractMap.SimpleEntry<>('E',31),
+              new AbstractMap.SimpleEntry<>('H',30),
+              new AbstractMap.SimpleEntry<>('L',31),
+              new AbstractMap.SimpleEntry<>('M',31),
+              new AbstractMap.SimpleEntry<>('P',30),
+              new AbstractMap.SimpleEntry<>('R',31),
+              new AbstractMap.SimpleEntry<>('S',30),
+              new AbstractMap.SimpleEntry<>('T',31)
+    );
+    public CodiceFiscale() {
+    	
+    }
     public CodiceFiscale(String nome,String cognome, String dataDiNascita, char sesso, String comune) {
         this.codice = "";
         this.codice+=this.generaNomeCF(nome);
@@ -104,46 +118,168 @@ public class CodiceFiscale {
     public void setCodice(String codice) {
         this.codice = codice;
     }
-    public boolean isVocale(char lettera) {
-    	for(int i = 0; i<5;i++) {
-    		if(lettera == vocali[i]) {
+    
+ /*------------------------------------------------------------------------------------------------------------*/
+    /**
+     * 
+     * @param carattere_alfabeto : è il carattere del codice fiscale che dobbiamo controllare se sia una vocale o meno.
+     * @return true se il carattere preso è effettivamente una vocale.
+     */
+    public boolean isVocale(char carattere_alfabeto) {
+    	for(int i = 0; i<vocali.length;i++) {
+    		if(carattere_alfabeto == vocali[i]) {
     			return true;
     		}	
     	}
     	return false;
     }
-   /* public boolean isValido(String codice) {
-       char[] codiceFiscale = codice.toCharArray();
-       for(int i=0; i<16; i++) {
-    	   if(i==0) {
-              if(isVocale(codiceFiscale[0])) {
-            	  return false;
-              }
-    	   }
-           if((i>0)&&(i<3)) {
-        	   
-           }
-       }  
-     }*/
-       
-
-    public void setValido(boolean valido) {
-        this.valido = valido;
+    
+    /**
+     * 
+     * @param lettera_per_mese : carattere alfabetico che dovrebbe indicare il mese di nascita.
+     * @return true se il il carattere è effettivamente tra quelli utilizzati per indicare un mese.
+     */
+    public boolean meseCorretto(char lettera_per_mese) {
+     
+    	return arrayMesi.containsKey(lettera_per_mese);
     }
+    
+    /**
+     * 
+     * @param carattere_numerico : carattere da controllare se sia un numero o no.
+     * @return true se il carattere è effettivamente numerico.
+     */
+    public boolean isNumero(char carattere_numerico) {
+    	try {
+            Integer.parseInt(String.valueOf(carattere_numerico));
+            }
+            catch(NumberFormatException e) {
+            	return false;
+            }
+    	return true;
+    }
+    
+    /**
+     * 
+     * @param decina_giorno : carattere del codice fiscale che indica la decina del giorno di nascita. 
+     * @param unità_giorno : carattere del codice fiscale che indica l'unità del giorno di nascita.
+     * @param codiceMese : carattere del codice fiscale che identifica il mese di nascita.
+     * @return true, se il giorno di nascita è compreso tra 1 e l'ultimo giorno del mese di nascita per gli uomini e tra 41 e l'ultimo giorno del mese di nascita per le donne.       
+     */
+    public boolean giornoCorretto(char decina_giorno, char unità_giorno, char codiceMese) {
+    	if(isNumero(decina_giorno) && isNumero(unità_giorno)){
+          int x = Integer.parseInt(String.valueOf(decina_giorno));
+          int y = Integer.parseInt(String.valueOf(unità_giorno));
+          int giorno_nascita = 10*x + y;
+          if((1<=giorno_nascita&&giorno_nascita<=arrayMesi.get(codiceMese))||(41<=giorno_nascita && giorno_nascita<=(arrayMesi.get(codiceMese)+40))) {
+        	  return true;
+          }
+    	}
+    	return false;
+    }
+    
+    /**
+     * 
+     * @param carattere_alfabeto : carattere_alfabeto : è il carattere del codice fiscale che dobbiamo controllare se sia una consonante o meno.
+     * @return true se il carattere è effettivamente una consonante;
+     */
+    public boolean isConsonante(char carattere_alfabeto) {
+    	for(int i = 0; i<consonanti.length;i++) {
+    		if(carattere_alfabeto == consonanti[i]) {
+    			return true;
+    		}	
+    	}
+    	return false;
+    }
+    
+    /**
+     * 
+     * @param carattere : carattere del codice fiscale da controllare se sia una lettera o no.
+     * @return true se è una vocale o una consonante, e quindi una lettera.
+     */
+    public boolean isLettera(char carattere) {
+    	if(isVocale(carattere)) {
+    		return true;
+    	}
+    	if(isConsonante(carattere)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * 
+     * @param codice : codice fiscale presente nell'array di codici forniti dal fale xml.
+     * @return true se il codice non presenta nessun errore di sorta a seguito dei vari controlli precedenti.
+     */
+    public boolean isValido(String codice) {
+       char[] codiceFiscale = codice.toCharArray();
+       if(codice.length()!=16) {
+    	   return false;
+       }
+       if((isVocale(codiceFiscale[0])) && isVocale(codiceFiscale[3])) {
+     	  return false;
+       }
+       if(isVocale(codiceFiscale[1])) {
+    	   if(!isVocale(codiceFiscale[2])) {
+    		   return false; 
+               }
+       }  
+       if(isVocale(codiceFiscale[4])) {
+    	   if(!isVocale(codiceFiscale[5])) {
+    		   return false; 
+               }
+       }  
+       if(!(isNumero(codiceFiscale[6])||isNumero(codiceFiscale[7]))) {
+    	   return false;
+       }
+       if(!meseCorretto(codiceFiscale[8])) {
+    	   return false;
+       }
+       if(!giornoCorretto(codiceFiscale[9],codiceFiscale[10], codiceFiscale[8])) {
+    	   return false;
+       }
+       if(!isLettera(codiceFiscale[11])) {
+    	   return false;
+       }
+       if((!isNumero(codiceFiscale[12]))||(!isNumero(codiceFiscale[13]))||(!isNumero(codiceFiscale[14]))) {
+    	   return false;
+       }
+       
+       if(!(codiceFiscale[15]==generaCarattereDiControlloCF(codice.substring(0, 15)))) {
+    	   return false;
+       }
+       
+       return true;
+     }
+ /*---------------------------------------------------------------------------------------------------*/      
     public String generaNomeCF(String nome){
         String nomeCF;
         return null;
     }
+    
     public String generaCognomeCF(String cognome){
         return null;
     }
+    
     public String generaDataDiNascitaCF(String data){
         return null;
     }
+    
     public String generaGiornoESessoCF(String data, char sesso){
         return null;
     }
-    public String generaCarattereDiControlloCF(String codiceParziale){
-        return null;
+    
+    public char generaCarattereDiControlloCF(String codiceParziale){
+    	int valoreCarattere=0;
+    	for(int i=0; i<codiceParziale.length();i++) {
+    		if(i%2==0) {
+    			valoreCarattere+=arrayCaratteriAlfanumericiDispari.get(codiceParziale.charAt(i));
+    		}
+    		else {
+    			valoreCarattere+=arrayCaratteriAlfanumericiPari.get(codiceParziale.charAt(i));
+    		}
+    	}
+        return resto[valoreCarattere%26];
     }
 }
