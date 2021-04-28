@@ -4,8 +4,9 @@ public class Comune {
     String nome;
     String codice;
 
-    public Comune(String nome) {
+    public Comune(String nome, String codice) {
         this.nome = nome;
+        this.codice = codice;
     }
 
     public Comune(){}

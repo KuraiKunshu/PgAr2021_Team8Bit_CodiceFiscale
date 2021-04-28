@@ -37,6 +37,14 @@ public class ReaderXML {
         this.elenco_codici_fiscali = elenco_codici_fiscali;
     }
 
+    public ArrayList<CodiceFiscale> getElenco_codici_invalidi() {
+        return elenco_codici_invalidi;
+    }
+
+    public void setElenco_codici_invalidi(ArrayList<CodiceFiscale> elenco_codici_invalidi) {
+        this.elenco_codici_invalidi = elenco_codici_invalidi;
+    }
+
     public ArrayList<Persona> getElenco_persone() {
         return elenco_persone;
     }
@@ -133,7 +141,6 @@ public class ReaderXML {
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
                     if (xmlr.getLocalName().equals(CODICE))
                         if (c.isValido())
-                            //Manca input String?
                             elenco_codici_fiscali.add(c);
                         else elenco_codici_invalidi.add(c);
                 }
@@ -167,7 +174,7 @@ public class ReaderXML {
                             break;
                         case PERSONA:
                             p = new Persona();
-                            //p.setId(xmlr.getAttributeValue(0));
+                            p.setId(xmlr.getAttributeValue(0));
                             break;
                         case NOME:
                             xmlr.next();
@@ -187,7 +194,7 @@ public class ReaderXML {
                         case COMUNE_NASCITA:
                             xmlr.next();
                             String comune = xmlr.getText();
-                            //p.setComune(new Comune(comune, elenco_comuni.get(comune)));
+                            p.setComune(new Comune(comune, elenco_comuni.get(comune)));
                             xmlr.next();
                             break;
                         case DATA_NASCITA:
@@ -199,7 +206,7 @@ public class ReaderXML {
                 }
                 else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT){
                     if (xmlr.getLocalName().equals(PERSONA))
-                        //p.getCf().setCodice(); Crea e controlla se è presente nell'elenco_codici_fiscali, e nel caso lo toglie?
+                        p.setCf(new CodiceFiscale(p.getNome(), p.getCognome(), p.getDataDiNascita(), p.getSesso(), p.getComune().getCodice()));
                         elenco_persone.add(p);
                 }
                 xmlr.next();
