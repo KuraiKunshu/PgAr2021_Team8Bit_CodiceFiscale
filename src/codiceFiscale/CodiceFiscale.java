@@ -8,6 +8,8 @@ import java.util.Map;
 public class CodiceFiscale {
     private String codice;
     private boolean valido;
+    private final char UOMO='M';
+    private final char DONNA='F';
     private final int DIMENSIONE_PARTE_CF=3;
     private final int POSIZIONEVOCALI=0;
     private final int POSIZIONICONSONANTI=1;
@@ -93,12 +95,13 @@ public class CodiceFiscale {
             new AbstractMap.SimpleEntry<>('Z',25)
     );
 
-    public CodiceFiscale(String nome,String cognome, String dataDiNascita, char sesso, String comune) {
+    public CodiceFiscale(String nome,String cognome, String dataDiNascita, char sesso, String codiceComune) {
         this.codice = "";
         this.codice+=this.generaCognomeCF(cognome);
         this.codice+=this.generaNomeCF(nome);
         this.codice+=this.generaDataDiNascitaCF(dataDiNascita);
         this.codice+=this.generaGiornoESessoCF(dataDiNascita, sesso);
+        this.codice+=codiceComune;
         this.codice+=this.generaCarattereDiControlloCF(this.codice);
     }
 
@@ -188,11 +191,29 @@ public class CodiceFiscale {
             return r.substring(0,3);
         }
     }
+
+    /**
+     * Anno di nascita (due cifre): si prendono le ultime due cifre dell'anno di nascita;
+     * Mese di nascita (una lettera): a ogni mese dell'anno viene associata una lettera in base all'array arrayCodiceMese
+     * @param data
+     * @return ritorna una stringa formata da 2 numeri e un carattere presente in arrayCodiceMese
+     */
     public String generaDataDiNascitaCF(String data){
-        return null;
+        return data.substring(2,4)+String.valueOf(arrayCodiceMese[Integer.parseInt(data.substring(5,7))-1]);
     }
+
+    /**
+     * Si prendono le due cifre del giorno di nascita (se è compreso tra 1 e 9 si pone uno zero come prima cifra);
+     * per i soggetti di sesso femminile, a tale cifra va sommato il numero 40. In questo modo il campo contiene la doppia informazione giorno di nascita e sesso.
+     * Avremo pertanto la seguente casistica: i maschi avranno il giorno con cifra da 01 a 31, mentre per le donne la cifra relativa al giorno sarà da 41 a 71.
+     * @param data
+     * @param sesso
+     * @return ritorna una stringa formata da 2 cifre
+     */
     public String generaGiornoESessoCF(String data, char sesso){
-        return null;
+        String d=data.substring(data.length()-2);
+        if(Character.toUpperCase(sesso)==UOMO)return d;
+        else return String.valueOf(Integer.parseInt(d)+40);
     }
     public String generaCarattereDiControlloCF(String codiceParziale){
         return null;
