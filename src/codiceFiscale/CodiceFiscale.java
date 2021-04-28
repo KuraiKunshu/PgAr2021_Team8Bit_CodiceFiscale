@@ -1,6 +1,7 @@
 package codiceFiscale;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class CodiceFiscale {
@@ -15,7 +16,7 @@ public class CodiceFiscale {
     private final char[] resto={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     private final char[] consonanti={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'};
     private final char[] vocali={'A','E','I','O','U'};
-    private final Map<Character, Integer> arrayCaratteriAlfanumericiDispari=Map.ofEntries(
+    private final Map<Character, Integer> arrayCaratteriAlfanumericiDispari = Map.ofEntries(
             new AbstractMap.SimpleEntry<>('0',1),
             new AbstractMap.SimpleEntry<>('1',0),
             new AbstractMap.SimpleEntry<>('2',5),
@@ -53,8 +54,7 @@ public class CodiceFiscale {
             new AbstractMap.SimpleEntry<>('Y',24),
             new AbstractMap.SimpleEntry<>('Z',23)
     );
-    // CREARE SOLO UN ARRAY ALFABETO INVECE CHE MAP PER I PARI?
-    private final Map<Character, Integer> arrayCaratteriAlfanumericiPari =Map.ofEntries(
+    private final Map<Character, Integer> arrayCaratteriAlfanumericiPari = Map.ofEntries(
             new AbstractMap.SimpleEntry<>('0',0),
             new AbstractMap.SimpleEntry<>('1',1),
             new AbstractMap.SimpleEntry<>('2',2),
@@ -92,7 +92,7 @@ public class CodiceFiscale {
             new AbstractMap.SimpleEntry<>('Y',24),
             new AbstractMap.SimpleEntry<>('Z',25)
     );
-    private final Map<Character, Integer> arrayMesi =Map.ofEntries(
+    private final Map<Character, Integer> arrayMesi = Map.ofEntries(
     		  new AbstractMap.SimpleEntry<>('A',31),
               new AbstractMap.SimpleEntry<>('B',28),
               new AbstractMap.SimpleEntry<>('C',31),
@@ -118,9 +118,7 @@ public class CodiceFiscale {
     }
 
     public CodiceFiscale() {
-
     }
-
 
     public String getCodice() {
         return codice;
@@ -130,18 +128,12 @@ public class CodiceFiscale {
         this.codice = codice;
     }
 
-    
- /*------------------------------------------------------------------------------------------------------------*/
-
-
-    
     /**
      * 
      * @param lettera_per_mese : carattere alfabetico che dovrebbe indicare il mese di nascita.
      * @return true se il il carattere � effettivamente tra quelli utilizzati per indicare un mese.
      */
     public boolean meseCorretto(char lettera_per_mese) {
-     
     	return arrayMesi.containsKey(lettera_per_mese);
     }
     
@@ -153,10 +145,9 @@ public class CodiceFiscale {
     public boolean isNumero(char carattere_numerico) {
     	try {
             Integer.parseInt(String.valueOf(carattere_numerico));
-            }
-            catch(NumberFormatException e) {
-            	return false;
-            }
+    	} catch(NumberFormatException e) {
+            return false;
+    	}
     	return true;
     }
     
@@ -169,16 +160,29 @@ public class CodiceFiscale {
      */
     public boolean giornoCorretto(char decina_giorno, char unita_giorno, char codiceMese) {
     	if(isNumero(decina_giorno) && isNumero(unita_giorno)){
-          int x = Integer.parseInt(String.valueOf(decina_giorno));
-          int y = Integer.parseInt(String.valueOf(unita_giorno));
-          int giorno_nascita = 10*x + y;
-          if((1<=giorno_nascita&&giorno_nascita<=arrayMesi.get(codiceMese))||(41<=giorno_nascita && giorno_nascita<=(arrayMesi.get(codiceMese)+40))) {
-        	  return true;
-          }
+            int x = Integer.parseInt(String.valueOf(decina_giorno));
+            int y = Integer.parseInt(String.valueOf(unita_giorno));
+            int giorno_nascita = 10*x + y;
+            if((1<=giorno_nascita&&giorno_nascita<=arrayMesi.get(codiceMese))||(41<=giorno_nascita && giorno_nascita<=(arrayMesi.get(codiceMese)+40))) return true;
     	}
     	return false;
     }
-    
+
+    /**
+     *
+     * @param elenco_codici_fiscali
+     * @return
+     */
+    public boolean isPresente (ArrayList<CodiceFiscale> elenco_codici_fiscali){
+        for(int i=0; i<elenco_codici_fiscali.size(); i++){
+            if (this.getCodice().equals(elenco_codici_fiscali.get(i).getCodice())) {
+                elenco_codici_fiscali.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 
      * @param carattere_alfabeto : carattere_alfabeto : � il carattere del codice fiscale che dobbiamo controllare se sia una consonante o meno.
@@ -186,9 +190,7 @@ public class CodiceFiscale {
      */
     public boolean isConsonante(char carattere_alfabeto) {
     	for(int i = 0; i<consonanti.length;i++) {
-    		if(carattere_alfabeto == consonanti[i]) {
-    			return true;
-    		}	
+    		if(carattere_alfabeto == consonanti[i]) return true;
     	}
     	return false;
     }
@@ -199,62 +201,32 @@ public class CodiceFiscale {
      * @return true se � una vocale o una consonante, e quindi una lettera.
      */
     public boolean isLettera(char carattere) {
-    	if(isVocale(carattere)) {
-    		return true;
-    	}
-    	if(isConsonante(carattere)) {
-    		return true;
-    	}
+    	if(isVocale(carattere)) return true;
+    	if(isConsonante(carattere)) return true;
     	return false;
     }
-    
-    /**
-     * 
-     * @param codice : codice fiscale presente nell'array di codici forniti dal fale xml.
-     * @return true se il codice non presenta nessun errore di sorta a seguito dei vari controlli precedenti.
-     */
-    public boolean isValido(String codice) {
-       char[] codiceFiscale = codice.toCharArray();
-       if(codice.length()!=16) {
-    	   return false;
-       }
-       if((isVocale(codiceFiscale[0])) && isVocale(codiceFiscale[3])) {
-     	  return false;
-       }
-       if(isVocale(codiceFiscale[1])) {
-    	   if(!isVocale(codiceFiscale[2])) {
-    		   return false; 
-               }
-       }  
-       if(isVocale(codiceFiscale[4])) {
-    	   if(!isVocale(codiceFiscale[5])) {
-    		   return false; 
-               }
-       }  
-       if(!(isNumero(codiceFiscale[6])||isNumero(codiceFiscale[7]))) {
-    	   return false;
-       }
-       if(!meseCorretto(codiceFiscale[8])) {
-    	   return false;
-       }
-       if(!giornoCorretto(codiceFiscale[9],codiceFiscale[10], codiceFiscale[8])) {
-    	   return false;
-       }
-       if(!isLettera(codiceFiscale[11])) {
-    	   return false;
-       }
-       if((!isNumero(codiceFiscale[12]))||(!isNumero(codiceFiscale[13]))||(!isNumero(codiceFiscale[14]))) {
-    	   return false;
-       }
-       
-       if(!(codiceFiscale[15]==generaCarattereDiControlloCF(codice.substring(0, 15)))) {
-    	   return false;
-       }
-       
-       return true;
-     }
- /*---------------------------------------------------------------------------------------------------*/
 
+    /**
+     *
+     * @return true se il codice fiscale è valido, altrimenti false
+     */
+    public boolean isValido() {
+        char[] codiceFiscale = this.codice.toCharArray();
+        if(codiceFiscale.length!=16) return false;
+        if((isVocale(codiceFiscale[0])) && isVocale(codiceFiscale[3])) return false;
+        if(isVocale(codiceFiscale[1]))
+            if (!isVocale(codiceFiscale[2])) return false;
+        if(isVocale(codiceFiscale[4]))
+    	    if(!isVocale(codiceFiscale[5])) return false;
+        if(!(isNumero(codiceFiscale[6])||isNumero(codiceFiscale[7]))) return false;
+        if(!meseCorretto(codiceFiscale[8])) return false;
+        if(!giornoCorretto(codiceFiscale[9],codiceFiscale[10], codiceFiscale[8])) return false;
+        if(!isLettera(codiceFiscale[11])) return false;
+        if((!isNumero(codiceFiscale[12]))||(!isNumero(codiceFiscale[13]))||(!isNumero(codiceFiscale[14]))) return false;
+        if(!(codiceFiscale[15]==generaCarattereDiControlloCF(this.codice.substring(0, 15)))) return false;
+
+        return true;
+    }
 
     /**
      * @param lettera
@@ -318,8 +290,8 @@ public class CodiceFiscale {
 
     public String generaCognomeCF(String cognome){
         char[][] m=getMatriceVocaliConsonanti(cognome.toUpperCase());
-        if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI]);
-        else if(m[POSIZIONICONSONANTI].length>DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI],0,3);
+        if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF) return String.valueOf(m[POSIZIONICONSONANTI]);
+        else if(m[POSIZIONICONSONANTI].length>DIMENSIONE_PARTE_CF) return String.valueOf(m[POSIZIONICONSONANTI],0,3);
         else{
             String r=String.valueOf(m[POSIZIONICONSONANTI])+String.valueOf(m[POSIZIONEVOCALI]);
             if(r.length()<DIMENSIONE_PARTE_CF)r+="XXX";
@@ -337,7 +309,6 @@ public class CodiceFiscale {
         return data.substring(2,4)+String.valueOf(arrayCodiceMese[Integer.parseInt(data.substring(5,7))-1]);
     }
 
-
     /**
      * Si prendono le due cifre del giorno di nascita (se è compreso tra 1 e 9 si pone uno zero come prima cifra);
      * per i soggetti di sesso femminile, a tale cifra va sommato il numero 40. In questo modo il campo contiene la doppia informazione giorno di nascita e sesso.
@@ -348,19 +319,15 @@ public class CodiceFiscale {
      */
     public String generaGiornoESessoCF(String data, char sesso){
         String d=data.substring(data.length()-2);
-        if(Character.toUpperCase(sesso)==UOMO)return d;
+        if(Character.toUpperCase(sesso)==UOMO) return d;
         else return String.valueOf(Integer.parseInt(d)+40);
     }
     
     public char generaCarattereDiControlloCF(String codiceParziale){
     	int valoreCarattere=0;
     	for(int i=0; i<codiceParziale.length();i++) {
-    		if(i%2==0) {
-    			valoreCarattere+=arrayCaratteriAlfanumericiDispari.get(codiceParziale.charAt(i));
-    		}
-    		else {
-    			valoreCarattere+=arrayCaratteriAlfanumericiPari.get(codiceParziale.charAt(i));
-    		}
+    		if(i%2==0) valoreCarattere+=arrayCaratteriAlfanumericiDispari.get(codiceParziale.charAt(i));
+    		else valoreCarattere+=arrayCaratteriAlfanumericiPari.get(codiceParziale.charAt(i));
     	}
         return resto[valoreCarattere%26];
     }
