@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ReaderXML {
-    private static final String PERSONE = "persone";
     private static final String PERSONA = "persona";
     private static final String NOME = "nome";
     private static final String COGNOME = "cognome";
@@ -22,8 +21,6 @@ public class ReaderXML {
     private ArrayList<CodiceFiscale> elenco_codici_fiscali;
     private ArrayList<CodiceFiscale> elenco_codici_invalidi;
     private ArrayList<Persona> elenco_persone;
-    private int numero_codici_fiscali;
-    private String numero_persone;
 
     public Map<String, String> getElenco_comuni() {
         return elenco_comuni;
@@ -53,27 +50,23 @@ public class ReaderXML {
         this.elenco_persone = elenco_persone;
     }
 
-    public int getNumero_codici_fiscali() {
-        return numero_codici_fiscali;
-    }
-
-    public String getNumero_persone() {
-        return numero_persone;
-    }
-
-    //Costruttore di reader
+    /**Costruttore di ReaderXML.
+     * Inizializza gli ArrayList che verranno riempiti durante la lettura dell'xml.
+     */
     public ReaderXML() {
         elenco_codici_fiscali = new ArrayList<CodiceFiscale>();
         elenco_codici_invalidi = new ArrayList<CodiceFiscale>();
         elenco_persone = new ArrayList<Persona>();
     }
 
-    /** Metodo che serve per leggere il file comuni.xml, analizzare i dati contenuti nell'xml attraverso
-     * i metodi dello XMLStreamReader e creare un ArrayList di Comune
-     * @param filename = il file comuni.xml che verrà fornito al metodo alla chiamata nel main
-     * @return elenco_comuni = un ArrayList di Comune, ciascuno dotato di un String nome e un String codice
+    /**Metodo che serve per leggere il file comuni.xml, analizzare i dati contenuti nell'xml attraverso
+     * i metodi dello XMLStreamReader e creare un Map<String, String> costituito dal nome del comune
+     * e dal rispettivo codice.
+     * @param filename il file comuni.xml che verrà fornito al metodo alla chiamata nel Main.
      */
-    public Map<String, String> LeggiXMLComuni (String filename) {
+    public void LeggiXMLComuni (String filename) {
+        //Questo frammento di codice serve a creare ed istanziare la variabile xmlr di tipo XMLStreamReader, che sarà
+        //utilizzata per leggere il file XML
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
         try {
@@ -114,10 +107,18 @@ public class ReaderXML {
             System.out.println("Errore nella lettura di comuni.xml:");
             System.out.println(e.getMessage());
         }
-        return elenco_comuni;
+        return;
     }
 
+    /**Metodo che serve per leggere il file codiciFiscali.xml, analizzare i dati contenuti nell'xml attraverso
+     * i metodi dello XMLStreamReader e aggiungere i codici fiscali nei 2 ArrayList di CodiceFiscale
+     * inizializzati nel costruttore del ReaderXML. I codici fiscali validi vengono aggiunti
+     * nell'ArrayList elenco_codici_fiscali, quelli non validi nell'ArrayList elenco_codici_invalidi.
+     * @param filename il file codiciFiscali.xml che verrà fornito al metodo alla chiamata nel Main.
+     */
     public void LeggiXMLCodiciFiscali (String filename) {
+        //Questo frammento di codice serve a creare ed istanziare la variabile xmlr di tipo XMLStreamReader, che sarà
+        //utilizzata per leggere il file XML
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
         try {
@@ -137,7 +138,7 @@ public class ReaderXML {
                         xmlr.next();
                         c.setCodice(xmlr.getText());
                         xmlr.next();
-                    } else numero_codici_fiscali = Integer.parseInt(xmlr.getAttributeLocalName(0));
+                    }
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
                     if (xmlr.getLocalName().equals(CODICE))
                         if (c.isValido())
@@ -153,7 +154,15 @@ public class ReaderXML {
         return;
     }
 
-    public ArrayList<Persona> LeggiXMLInputPersone (String filename){
+    /**Metodo che serve per leggere il file inputPersone.xml e analizzare i dati contenuti nell'xml attraverso
+     * i metodi dello XMLStreamReader. Crea oggetti di classe Persona che hanno come attributi id, nome, cognome, sesso,
+     * data di nascita, Comune (nome e codice) e crea per ognuno il codice fiscale. I vari oggetti
+     * Persona vengono aggiunti all'ArrayList elenco_persone, già inizializzato nel costruttore del ReaderXML.
+     * @param filename il file inputPersone.xml che verrà fornito al metodo alla chiamata nel Main.
+     */
+    public void LeggiXMLInputPersone (String filename){
+        //Questo frammento di codice serve a creare ed istanziare la variabile xmlr di tipo XMLStreamReader, che sarà
+        //utilizzata per leggere il file XML
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
         try {
@@ -169,9 +178,6 @@ public class ReaderXML {
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT){
                     String nome_tag = xmlr.getLocalName();
                     switch (nome_tag){
-                        case PERSONE:
-                            numero_persone = xmlr.getAttributeValue(0);
-                            break;
                         case PERSONA:
                             p = new Persona();
                             p.setId(xmlr.getAttributeValue(0));
@@ -215,6 +221,6 @@ public class ReaderXML {
             System.out.println("Errore nella lettura di inputPersone.xml:");
             System.out.println(e.getMessage());
         }
-        return elenco_persone;
+        return;
     }
 }

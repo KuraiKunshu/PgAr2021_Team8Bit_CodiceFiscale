@@ -23,9 +23,19 @@ public class WriterXML {
     private static final String DATA_NASCITA = "data_nascita";
     private static final String CODICE = "codice";
 
+    /**Costruttore del WriterXML
+     */
     public WriterXML(){}
 
+    /**Metodo utilizzato per creare un file codiciPersone.xml
+     * @param elenco_persone ArrayList di Persona, dal quale verranno presi i dati e scritti sul file xml.
+     * @param elenco_codici_fiscali ArrayList di CodiceFiscale, contenente codici fiscali validi, che nel file xml verranno divisi in spaiati e appaiati(con una Persona).
+     * @param elenco_codici_invalidi ArrayList di CodiceFiscale contenente codici fiscali non validi, che verranno scritti sul file xml.
+     * @param filePath il file xml creato
+     */
     public void ScriviXML(ArrayList<Persona> elenco_persone, ArrayList<CodiceFiscale> elenco_codici_fiscali, ArrayList<CodiceFiscale> elenco_codici_invalidi,String filePath) {
+        //Questo frammento di codice serve a creare ed istanziare la variabile xmlw di tipo XMLStreamWriter, che
+        //sarà utilizzata per scrivere il file XML. Viene inoltre inizializzato il documento XML.
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
         try {
