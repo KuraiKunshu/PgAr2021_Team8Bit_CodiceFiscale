@@ -1,10 +1,19 @@
 package codiceFiscale;
 
+import java.sql.Array;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class CodiceFiscale {
     private String codice;
+
+    private final char UOMO='M';
+    private final char DONNA='F';
+    private final int DIMENSIONE_PARTE_CF=3;
+    private final int POSIZIONEVOCALI=0;
+    private final int POSIZIONICONSONANTI=1;
+    private final char[] arrayCodiceMese={'A','B','C','D','E','H','L','M','P','R','S','T'};
     private final char[] resto={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     private final char[] consonanti={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'};
     private final char[] vocali={'A','E','I','O','U'};
@@ -99,17 +108,21 @@ public class CodiceFiscale {
               new AbstractMap.SimpleEntry<>('S',30),
               new AbstractMap.SimpleEntry<>('T',31)
     );
-    public CodiceFiscale() {
-    	
-    }
-    public CodiceFiscale(String nome,String cognome, String dataDiNascita, char sesso, String comune) {
+    
+    public CodiceFiscale(String nome,String cognome, String dataDiNascita, char sesso, String codiceComune) {
         this.codice = "";
-        this.codice+=this.generaNomeCF(nome);
         this.codice+=this.generaCognomeCF(cognome);
+        this.codice+=this.generaNomeCF(nome);
         this.codice+=this.generaDataDiNascitaCF(dataDiNascita);
         this.codice+=this.generaGiornoESessoCF(dataDiNascita, sesso);
+        this.codice+=codiceComune;
         this.codice+=this.generaCarattereDiControlloCF(this.codice);
     }
+
+    public CodiceFiscale() {
+
+    }
+
 
     public String getCodice() {
         return codice;
@@ -118,12 +131,13 @@ public class CodiceFiscale {
     public void setCodice(String codice) {
         this.codice = codice;
     }
+
     
  /*------------------------------------------------------------------------------------------------------------*/
     /**
      * 
-     * @param carattere_alfabeto : è il carattere del codice fiscale che dobbiamo controllare se sia una vocale o meno.
-     * @return true se il carattere preso è effettivamente una vocale.
+     * @param carattere_alfabeto : ï¿½ il carattere del codice fiscale che dobbiamo controllare se sia una vocale o meno.
+     * @return true se il carattere preso ï¿½ effettivamente una vocale.
      */
     public boolean isVocale(char carattere_alfabeto) {
     	for(int i = 0; i<vocali.length;i++) {
@@ -137,7 +151,7 @@ public class CodiceFiscale {
     /**
      * 
      * @param lettera_per_mese : carattere alfabetico che dovrebbe indicare il mese di nascita.
-     * @return true se il il carattere è effettivamente tra quelli utilizzati per indicare un mese.
+     * @return true se il il carattere ï¿½ effettivamente tra quelli utilizzati per indicare un mese.
      */
     public boolean meseCorretto(char lettera_per_mese) {
      
@@ -147,7 +161,7 @@ public class CodiceFiscale {
     /**
      * 
      * @param carattere_numerico : carattere da controllare se sia un numero o no.
-     * @return true se il carattere è effettivamente numerico.
+     * @return true se il carattere ï¿½ effettivamente numerico.
      */
     public boolean isNumero(char carattere_numerico) {
     	try {
@@ -162,14 +176,14 @@ public class CodiceFiscale {
     /**
      * 
      * @param decina_giorno : carattere del codice fiscale che indica la decina del giorno di nascita. 
-     * @param unità_giorno : carattere del codice fiscale che indica l'unità del giorno di nascita.
+     * @param unitï¿½_giorno : carattere del codice fiscale che indica l'unitï¿½ del giorno di nascita.
      * @param codiceMese : carattere del codice fiscale che identifica il mese di nascita.
-     * @return true, se il giorno di nascita è compreso tra 1 e l'ultimo giorno del mese di nascita per gli uomini e tra 41 e l'ultimo giorno del mese di nascita per le donne.       
+     * @return true, se il giorno di nascita ï¿½ compreso tra 1 e l'ultimo giorno del mese di nascita per gli uomini e tra 41 e l'ultimo giorno del mese di nascita per le donne.       
      */
-    public boolean giornoCorretto(char decina_giorno, char unità_giorno, char codiceMese) {
-    	if(isNumero(decina_giorno) && isNumero(unità_giorno)){
+    public boolean giornoCorretto(char decina_giorno, char unitï¿½_giorno, char codiceMese) {
+    	if(isNumero(decina_giorno) && isNumero(unitï¿½_giorno)){
           int x = Integer.parseInt(String.valueOf(decina_giorno));
-          int y = Integer.parseInt(String.valueOf(unità_giorno));
+          int y = Integer.parseInt(String.valueOf(unitï¿½_giorno));
           int giorno_nascita = 10*x + y;
           if((1<=giorno_nascita&&giorno_nascita<=arrayMesi.get(codiceMese))||(41<=giorno_nascita && giorno_nascita<=(arrayMesi.get(codiceMese)+40))) {
         	  return true;
@@ -180,8 +194,8 @@ public class CodiceFiscale {
     
     /**
      * 
-     * @param carattere_alfabeto : carattere_alfabeto : è il carattere del codice fiscale che dobbiamo controllare se sia una consonante o meno.
-     * @return true se il carattere è effettivamente una consonante;
+     * @param carattere_alfabeto : carattere_alfabeto : ï¿½ il carattere del codice fiscale che dobbiamo controllare se sia una consonante o meno.
+     * @return true se il carattere ï¿½ effettivamente una consonante;
      */
     public boolean isConsonante(char carattere_alfabeto) {
     	for(int i = 0; i<consonanti.length;i++) {
@@ -195,7 +209,7 @@ public class CodiceFiscale {
     /**
      * 
      * @param carattere : carattere del codice fiscale da controllare se sia una lettera o no.
-     * @return true se è una vocale o una consonante, e quindi una lettera.
+     * @return true se ï¿½ una vocale o una consonante, e quindi una lettera.
      */
     public boolean isLettera(char carattere) {
     	if(isVocale(carattere)) {
@@ -253,21 +267,107 @@ public class CodiceFiscale {
        return true;
      }
  /*---------------------------------------------------------------------------------------------------*/      
+=======
+
+    /**
+     * @param lettera
+     * @return ritorna true se il carattere inserito Ã¨ una vocale, altrimenti false
+     */
+    public boolean isVocale(char lettera) {
+    	for(int i = 0; i<5;i++) if(Character.toUpperCase(lettera) == vocali[i]) return true;
+    	return false;
+    }
+
+    public void setValido(boolean valido) {
+        this.valido = valido;
+    }
+
+
+    /**
+     * Vengono prese le consonanti del nome (o dei nomi, se ve ne Ã¨ piÃ¹ di uno) nel loro ordine (primo nome, di seguito il secondo e cosÃ¬ via) in questo modo:
+     * se il nome contiene quattro o piÃ¹ consonanti, si scelgono la prima, la terza e la quarta (per esempio: Gianfranco â†’ GFR),
+     * altrimenti le prime tre in ordine (per esempio: Tiziana â†’ TZN). Se il nome non ha consonanti a sufficienza, si prendono anche le vocali;
+     * in ogni caso le vocali vengono riportate dopo le consonanti (per esempio: Luca â†’ LCU).
+     * Nel caso in cui il nome abbia meno di tre lettere la parte di codice viene completata aggiungendo la lettera X.
+     * @param nome
+     * @return ritorna le prime 3 lettere del codice fiscale secondo lo standard
+     */
+
     public String generaNomeCF(String nome){
-        String nomeCF;
-        return null;
+        char[][] m=getMatriceVocaliConsonanti(nome.toUpperCase());
+        if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI]);
+        else if(m[POSIZIONICONSONANTI].length>DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI][0])+String.valueOf(m[POSIZIONICONSONANTI],2,2);
+        else{
+            String r=String.valueOf(m[POSIZIONICONSONANTI])+String.valueOf(m[POSIZIONEVOCALI]);
+            if(r.length()<DIMENSIONE_PARTE_CF)r+="XXX";
+            return r.substring(0,3);
+        }
     }
-    
+
+    /**
+     * questo metodo, data una stringa, ritorna un array bidimensionale formato da un array di consonanti e uno di vocali rispetto al nome
+     * @param nome
+     * @return
+     */
+    public char[][] getMatriceVocaliConsonanti(String nome){
+        String consonantiNome="";
+        String vocaliNome="";
+        //divido il nome nelle sue rispettive consonanti e vocali
+        for(int i=0; i<nome.length();i++){
+            if(isVocale(nome.charAt(i)))vocaliNome+=Character.toUpperCase(nome.charAt(i));
+            else consonantiNome+=Character.toUpperCase(nome.charAt(i));
+        }
+        System.out.println(vocaliNome);
+        System.out.println(consonantiNome);
+        char[][] m=new char[2][];
+        m[POSIZIONEVOCALI]=vocaliNome.toCharArray();
+        m[POSIZIONICONSONANTI]=consonantiNome.toCharArray();
+        return m;
+    }
+
+    /**
+     * Vengono prese le consonanti del cognome (o dei cognomi, se ve ne Ã¨ piÃ¹ di uno) nel loro ordine (primo cognome, di seguito il secondo e cosÃ¬ via).
+     * Se le consonanti sono insufficienti, si prelevano anche le vocali (se sono sufficienti le consonanti si prelevano la prima, la seconda e la terza consonante),
+     * sempre nel loro ordine e, comunque, le vocali vengono riportate dopo le consonanti (per esempio: Rosi â†’ RSO). Nel caso in cui un cognome abbia meno di tre lettere,
+     * la parte di codice viene completata aggiungendo la lettera X (per esempio: Fo â†’ FOX). Per le donne, viene preso in considerazione il solo cognome da nubile.
+     * @param cognome
+     * @return
+     */
+
     public String generaCognomeCF(String cognome){
-        return null;
+        char[][] m=getMatriceVocaliConsonanti(cognome.toUpperCase());
+        if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI]);
+        else if(m[POSIZIONICONSONANTI].length>DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI],0,3);
+        else{
+            String r=String.valueOf(m[POSIZIONICONSONANTI])+String.valueOf(m[POSIZIONEVOCALI]);
+            if(r.length()<DIMENSIONE_PARTE_CF)r+="XXX";
+            return r.substring(0,3);
+        }
     }
-    
+
+    /**
+     * Anno di nascita (due cifre): si prendono le ultime due cifre dell'anno di nascita;
+     * Mese di nascita (una lettera): a ogni mese dell'anno viene associata una lettera in base all'array arrayCodiceMese
+     * @param data
+     * @return ritorna una stringa formata da 2 numeri e un carattere presente in arrayCodiceMese
+     */
     public String generaDataDiNascitaCF(String data){
-        return null;
+        return data.substring(2,4)+String.valueOf(arrayCodiceMese[Integer.parseInt(data.substring(5,7))-1]);
     }
-    
+
+
+    /**
+     * Si prendono le due cifre del giorno di nascita (se Ã¨ compreso tra 1 e 9 si pone uno zero come prima cifra);
+     * per i soggetti di sesso femminile, a tale cifra va sommato il numero 40. In questo modo il campo contiene la doppia informazione giorno di nascita e sesso.
+     * Avremo pertanto la seguente casistica: i maschi avranno il giorno con cifra da 01 a 31, mentre per le donne la cifra relativa al giorno sarÃ  da 41 a 71.
+     * @param data
+     * @param sesso
+     * @return ritorna una stringa formata da 2 cifre
+     */
     public String generaGiornoESessoCF(String data, char sesso){
-        return null;
+        String d=data.substring(data.length()-2);
+        if(Character.toUpperCase(sesso)==UOMO)return d;
+        else return String.valueOf(Integer.parseInt(d)+40);
     }
     
     public char generaCarattereDiControlloCF(String codiceParziale){
