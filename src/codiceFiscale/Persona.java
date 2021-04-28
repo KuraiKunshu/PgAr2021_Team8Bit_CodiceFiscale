@@ -20,6 +20,8 @@ public class Persona {
         this.cf=new CodiceFiscale(nome, cognome,  dataDiNascita, sesso, this.comune.getCodice());
     }
 
+    public Persona(){}
+
     public int getId() {
         return id;
     }
@@ -58,5 +60,21 @@ public class Persona {
 
     public void setDataDiNascita(String dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
+    }
+
+    public Comune getComune() {
+        return comune;
+    }
+
+    public void setComune(Comune comune) {
+        this.comune = comune;
+    }
+
+    public CodiceFiscale getCf() {
+        return cf;
+    }
+
+    public void setCf(CodiceFiscale cf) {
+        this.cf = cf;
     }
 }
