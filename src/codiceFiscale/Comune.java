@@ -8,6 +8,8 @@ public class Comune {
         this.nome = nome;
     }
 
+    public Comune(){}
+
     public String getNome() {
         return nome;
     }
