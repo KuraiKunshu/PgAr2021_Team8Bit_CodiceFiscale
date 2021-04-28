@@ -1,8 +1,6 @@
 package codiceFiscale;
 
-import java.sql.Array;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class CodiceFiscale {
@@ -134,19 +132,8 @@ public class CodiceFiscale {
 
     
  /*------------------------------------------------------------------------------------------------------------*/
-    /**
-     * 
-     * @param carattere_alfabeto : � il carattere del codice fiscale che dobbiamo controllare se sia una vocale o meno.
-     * @return true se il carattere preso � effettivamente una vocale.
-     */
-    public boolean isVocale(char carattere_alfabeto) {
-    	for(int i = 0; i<vocali.length;i++) {
-    		if(carattere_alfabeto == vocali[i]) {
-    			return true;
-    		}	
-    	}
-    	return false;
-    }
+
+
     
     /**
      * 
@@ -176,14 +163,14 @@ public class CodiceFiscale {
     /**
      * 
      * @param decina_giorno : carattere del codice fiscale che indica la decina del giorno di nascita. 
-     * @param unit�_giorno : carattere del codice fiscale che indica l'unit� del giorno di nascita.
+     * @param unita_giorno : carattere del codice fiscale che indica l'unit� del giorno di nascita.
      * @param codiceMese : carattere del codice fiscale che identifica il mese di nascita.
      * @return true, se il giorno di nascita � compreso tra 1 e l'ultimo giorno del mese di nascita per gli uomini e tra 41 e l'ultimo giorno del mese di nascita per le donne.       
      */
-    public boolean giornoCorretto(char decina_giorno, char unit�_giorno, char codiceMese) {
-    	if(isNumero(decina_giorno) && isNumero(unit�_giorno)){
+    public boolean giornoCorretto(char decina_giorno, char unita_giorno, char codiceMese) {
+    	if(isNumero(decina_giorno) && isNumero(unita_giorno)){
           int x = Integer.parseInt(String.valueOf(decina_giorno));
-          int y = Integer.parseInt(String.valueOf(unit�_giorno));
+          int y = Integer.parseInt(String.valueOf(unita_giorno));
           int giorno_nascita = 10*x + y;
           if((1<=giorno_nascita&&giorno_nascita<=arrayMesi.get(codiceMese))||(41<=giorno_nascita && giorno_nascita<=(arrayMesi.get(codiceMese)+40))) {
         	  return true;
@@ -266,8 +253,8 @@ public class CodiceFiscale {
        
        return true;
      }
- /*---------------------------------------------------------------------------------------------------*/      
-=======
+ /*---------------------------------------------------------------------------------------------------*/
+
 
     /**
      * @param lettera
@@ -277,11 +264,6 @@ public class CodiceFiscale {
     	for(int i = 0; i<5;i++) if(Character.toUpperCase(lettera) == vocali[i]) return true;
     	return false;
     }
-
-    public void setValido(boolean valido) {
-        this.valido = valido;
-    }
-
 
     /**
      * Vengono prese le consonanti del nome (o dei nomi, se ve ne è più di uno) nel loro ordine (primo nome, di seguito il secondo e così via) in questo modo:
