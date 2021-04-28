@@ -23,20 +23,9 @@ public class WriterXML {
     private static final String DATA_NASCITA = "data_nascita";
     private static final String CODICE = "codice";
 
-    private int numero_cf_invalidi;
-    private int numero_cf_spaiati;
-
     public WriterXML(){}
 
-    public void setNumero_cf_invalidi(int numero_cf_invalidi) {
-        this.numero_cf_invalidi = numero_cf_invalidi;
-    }
-
-    public void setNumero_cf_spaiati(int numero_cf_spaiati) {
-        this.numero_cf_spaiati = numero_cf_spaiati;
-    }
-
-    public void ScriviXML(ArrayList<Persona> elenco_persone, ArrayList<CodiceFiscale> elenco_codici_fiscali, String filePath) {
+    public void ScriviXML(ArrayList<Persona> elenco_persone, ArrayList<CodiceFiscale> elenco_codici_fiscali, ArrayList<CodiceFiscale> elenco_codici_invalidi,String filePath) {
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
         try {
@@ -50,10 +39,10 @@ public class WriterXML {
         try {
             xmlw.writeStartElement(OUTPUT);
             xmlw.writeStartElement(PERSONE);
-            xmlw.writeAttribute(NUMERO, "1000"); //Come si fa il getNumero_Persone
+            xmlw.writeAttribute(NUMERO, Integer.toString(elenco_persone.size()));
             for (int i = 0; i < elenco_persone.size(); i++) {
                 xmlw.writeStartElement(PERSONA);
-                //xmlw.writeAttribute(ID, elenco_persone.get(i).getId());
+                xmlw.writeAttribute(ID, elenco_persone.get(i).getId());
                 xmlw.writeStartElement(NOME);
                 xmlw.writeCharacters(elenco_persone.get(i).getNome());
                 xmlw.writeEndElement();
@@ -78,22 +67,22 @@ public class WriterXML {
                 xmlw.writeEndElement();
             }
             xmlw.writeEndElement();
-        } catch (Exception e) { // se c’è un errore viene eseguita questa parte
+        } catch (Exception e) { // se trova un errore viene eseguita questa parte
             System.out.println("Errore nella scrittura persone");
         }
         try {
             xmlw.writeStartElement(CODICI);
             xmlw.writeStartElement(INVALIDI);
-            xmlw.writeAttribute(NUMERO, Integer.toString(numero_cf_invalidi));
+            xmlw.writeAttribute(NUMERO, Integer.toString(elenco_codici_invalidi.size()));
             //Stampa codici invalidi
-            /*for (int i=0; i<elenco_codici_invalidi.size(); i++) {
+            for (int i=0; i<elenco_codici_invalidi.size(); i++) {
                 xmlw.writeStartElement(CODICE);
                 xmlw.writeCharacters(elenco_codici_invalidi.get(i).getCodice());
                 xmlw.writeEndElement();
-            }*/
+            }
             xmlw.writeEndElement();
             xmlw.writeStartElement(SPAIATI);
-            xmlw.writeAttribute(NUMERO, Integer.toString(numero_cf_spaiati));
+            xmlw.writeAttribute(NUMERO, Integer.toString(elenco_codici_fiscali.size()));
             //Stampa codici spaiati
             for (int i=0; i<elenco_codici_fiscali.size(); i++) {
                 xmlw.writeStartElement(CODICE);
@@ -106,7 +95,7 @@ public class WriterXML {
             xmlw.writeEndDocument();
             xmlw.flush();
             xmlw.close();
-        } catch (Exception e) { // se c’è un errore viene eseguita questa parte
+        } catch (Exception e) { // se trova un errore viene eseguita questa parte
             System.out.println("Errore nella scrittura codici");
         }
     }

@@ -2,15 +2,15 @@ package codiceFiscale;
 
 public class Persona {
     //FARE LA JAVADOC
-    private int id;
+    private String id;
     private String nome;
     private String cognome;
     private char sesso;
     private String dataDiNascita;
     private Comune comune;
     private CodiceFiscale cf;
-//meglio instanziare un comune ogni volta o fare che punti a qualcosa?
-    public Persona(int id, String nome, String cognome, char sesso, String dataDiNascita, String comune) {
+    //meglio instanziare un comune ogni volta o fare che punti a qualcosa?
+    /*public Persona(int id, String nome, String cognome, char sesso, String dataDiNascita, String comune) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
@@ -18,15 +18,15 @@ public class Persona {
         this.dataDiNascita = dataDiNascita;
         this.comune=new Comune(comune);
         this.cf=new CodiceFiscale(nome, cognome,  dataDiNascita, sesso, this.comune.getCodice());
-    }
+    }*/
 
     public Persona(){}
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
