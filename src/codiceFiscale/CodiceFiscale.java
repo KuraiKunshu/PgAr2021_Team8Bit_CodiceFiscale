@@ -95,8 +95,8 @@ public class CodiceFiscale {
 
     public CodiceFiscale(String nome,String cognome, String dataDiNascita, char sesso, String comune) {
         this.codice = "";
-        this.codice+=this.generaNomeCF(nome);
         this.codice+=this.generaCognomeCF(cognome);
+        this.codice+=this.generaNomeCF(nome);
         this.codice+=this.generaDataDiNascitaCF(dataDiNascita);
         this.codice+=this.generaGiornoESessoCF(dataDiNascita, sesso);
         this.codice+=this.generaCarattereDiControlloCF(this.codice);
@@ -139,13 +139,14 @@ public class CodiceFiscale {
      * @return ritorna le prime 3 lettere del codice fiscale secondo lo standard
      */
     public String generaNomeCF(String nome){
-        char[][] m=getMatriceVocaliConsonanti(nome);
-        if(m[POSIZIONICONSONANTI].length==3)return String.valueOf(m[POSIZIONICONSONANTI]);
-        else if(m[POSIZIONICONSONANTI].length>3)return String.valueOf(m[POSIZIONICONSONANTI][0])+String.valueOf(m[POSIZIONICONSONANTI],2,2);
-        else if(m[POSIZIONICONSONANTI].length<3){
-            //for in base al quante consonanti mancano?
+        char[][] m=getMatriceVocaliConsonanti(nome.toUpperCase());
+        if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI]);
+        else if(m[POSIZIONICONSONANTI].length>DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI][0])+String.valueOf(m[POSIZIONICONSONANTI],2,2);
+        else{
+            String r=String.valueOf(m[POSIZIONICONSONANTI])+String.valueOf(m[POSIZIONEVOCALI]);
+            if(r.length()<DIMENSIONE_PARTE_CF)r+="XXX";
+            return r.substring(0,3);
         }
-        return "XXX";
     }
 
     /**
@@ -169,8 +170,23 @@ public class CodiceFiscale {
         return m;
     }
 
+    /**
+     * Vengono prese le consonanti del cognome (o dei cognomi, se ve ne è più di uno) nel loro ordine (primo cognome, di seguito il secondo e così via).
+     * Se le consonanti sono insufficienti, si prelevano anche le vocali (se sono sufficienti le consonanti si prelevano la prima, la seconda e la terza consonante),
+     * sempre nel loro ordine e, comunque, le vocali vengono riportate dopo le consonanti (per esempio: Rosi → RSO). Nel caso in cui un cognome abbia meno di tre lettere,
+     * la parte di codice viene completata aggiungendo la lettera X (per esempio: Fo → FOX). Per le donne, viene preso in considerazione il solo cognome da nubile.
+     * @param cognome
+     * @return
+     */
     public String generaCognomeCF(String cognome){
-        return null;
+        char[][] m=getMatriceVocaliConsonanti(cognome.toUpperCase());
+        if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI]);
+        else if(m[POSIZIONICONSONANTI].length>DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI],0,3);
+        else{
+            String r=String.valueOf(m[POSIZIONICONSONANTI])+String.valueOf(m[POSIZIONEVOCALI]);
+            if(r.length()<DIMENSIONE_PARTE_CF)r+="XXX";
+            return r.substring(0,3);
+        }
     }
     public String generaDataDiNascitaCF(String data){
         return null;
