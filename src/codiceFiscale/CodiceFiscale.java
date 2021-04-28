@@ -1,11 +1,16 @@
 package codiceFiscale;
 
+import java.sql.Array;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class CodiceFiscale {
     private String codice;
     private boolean valido;
+    private final int DIMENSIONE_PARTE_CF=3;
+    private final int POSIZIONEVOCALI=0;
+    private final int POSIZIONICONSONANTI=1;
     private final char[] arrayCodiceMese={'A','B','C','D','E','H','L','M','P','R','S','T'};
     private final char[] resto={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     private final char[] consonanti={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'};
@@ -97,6 +102,11 @@ public class CodiceFiscale {
         this.codice+=this.generaCarattereDiControlloCF(this.codice);
     }
 
+    public CodiceFiscale() {
+
+    }
+
+
     public String getCodice() {
         return codice;
     }
@@ -104,36 +114,61 @@ public class CodiceFiscale {
     public void setCodice(String codice) {
         this.codice = codice;
     }
+
+    /**
+     * @param lettera
+     * @return ritorna true se il carattere inserito è una vocale, altrimenti false
+     */
     public boolean isVocale(char lettera) {
-    	for(int i = 0; i<5;i++) {
-    		if(lettera == vocali[i]) {
-    			return true;
-    		}	
-    	}
+    	for(int i = 0; i<5;i++) if(Character.toUpperCase(lettera) == vocali[i]) return true;
     	return false;
     }
-   /* public boolean isValido(String codice) {
-       char[] codiceFiscale = codice.toCharArray();
-       for(int i=0; i<16; i++) {
-    	   if(i==0) {
-              if(isVocale(codiceFiscale[0])) {
-            	  return false;
-              }
-    	   }
-           if((i>0)&&(i<3)) {
-        	   
-           }
-       }  
-     }*/
-       
 
     public void setValido(boolean valido) {
         this.valido = valido;
     }
+
+
+    /**
+     * Vengono prese le consonanti del nome (o dei nomi, se ve ne è più di uno) nel loro ordine (primo nome, di seguito il secondo e così via) in questo modo:
+     * se il nome contiene quattro o più consonanti, si scelgono la prima, la terza e la quarta (per esempio: Gianfranco → GFR),
+     * altrimenti le prime tre in ordine (per esempio: Tiziana → TZN). Se il nome non ha consonanti a sufficienza, si prendono anche le vocali;
+     * in ogni caso le vocali vengono riportate dopo le consonanti (per esempio: Luca → LCU).
+     * Nel caso in cui il nome abbia meno di tre lettere la parte di codice viene completata aggiungendo la lettera X.
+     * @param nome
+     * @return ritorna le prime 3 lettere del codice fiscale secondo lo standard
+     */
     public String generaNomeCF(String nome){
-        String nomeCF;
-        return null;
+        char[][] m=getMatriceVocaliConsonanti(nome);
+        if(m[POSIZIONICONSONANTI].length==3)return String.valueOf(m[POSIZIONICONSONANTI]);
+        else if(m[POSIZIONICONSONANTI].length>3)return String.valueOf(m[POSIZIONICONSONANTI][0])+String.valueOf(m[POSIZIONICONSONANTI],2,2);
+        else if(m[POSIZIONICONSONANTI].length<3){
+            //for in base al quante consonanti mancano?
+        }
+        return "XXX";
     }
+
+    /**
+     * questo metodo, data una stringa, ritorna un array bidimensionale formato da un array di consonanti e uno di vocali rispetto al nome
+     * @param nome
+     * @return
+     */
+    public char[][] getMatriceVocaliConsonanti(String nome){
+        String consonantiNome="";
+        String vocaliNome="";
+        //divido il nome nelle sue rispettive consonanti e vocali
+        for(int i=0; i<nome.length();i++){
+            if(isVocale(nome.charAt(i)))vocaliNome+=Character.toUpperCase(nome.charAt(i));
+            else consonantiNome+=Character.toUpperCase(nome.charAt(i));
+        }
+        System.out.println(vocaliNome);
+        System.out.println(consonantiNome);
+        char[][] m=new char[2][];
+        m[POSIZIONEVOCALI]=vocaliNome.toCharArray();
+        m[POSIZIONICONSONANTI]=consonantiNome.toCharArray();
+        return m;
+    }
+
     public String generaCognomeCF(String cognome){
         return null;
     }
