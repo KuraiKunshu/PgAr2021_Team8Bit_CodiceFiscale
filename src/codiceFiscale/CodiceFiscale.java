@@ -271,8 +271,6 @@ public class CodiceFiscale {
             if(isVocale(nome.charAt(i)))vocaliNome+=Character.toUpperCase(nome.charAt(i));
             else consonantiNome+=Character.toUpperCase(nome.charAt(i));
         }
-        System.out.println(vocaliNome);
-        System.out.println(consonantiNome);
         char[][] m=new char[2][];
         m[POSIZIONEVOCALI]=vocaliNome.toCharArray();
         m[POSIZIONICONSONANTI]=consonantiNome.toCharArray();
