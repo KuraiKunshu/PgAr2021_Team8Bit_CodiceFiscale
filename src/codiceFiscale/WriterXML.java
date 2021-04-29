@@ -45,11 +45,13 @@ public class WriterXML {
         } catch (Exception e) {
             System.out.println("Errore nell'inizializzazione del writer:");
             System.out.println(e.getMessage());
+            return;
         }
         try {
             xmlw.writeStartElement(OUTPUT);
             xmlw.writeStartElement(PERSONE);
             xmlw.writeAttribute(NUMERO, Integer.toString(elenco_persone.size()));
+            System.out.println("numero persone da aggiungere: "+elenco_persone.size());
             for (int i = 0; i < elenco_persone.size(); i++) {
                 xmlw.writeStartElement(PERSONA);
                 xmlw.writeAttribute(ID, elenco_persone.get(i).getId());
@@ -79,11 +81,13 @@ public class WriterXML {
             xmlw.writeEndElement();
         } catch (Exception e) { // se trova un errore viene eseguita questa parte
             System.out.println("Errore nella scrittura persone");
+            return;
         }
         try {
             xmlw.writeStartElement(CODICI);
             xmlw.writeStartElement(INVALIDI);
             xmlw.writeAttribute(NUMERO, Integer.toString(elenco_codici_invalidi.size()));
+            System.out.println("numero codici Invalidi da aggiungere: "+elenco_codici_invalidi.size());
             //Stampa codici invalidi
             for (int i=0; i<elenco_codici_invalidi.size(); i++) {
                 xmlw.writeStartElement(CODICE);
@@ -93,6 +97,7 @@ public class WriterXML {
             xmlw.writeEndElement();
             xmlw.writeStartElement(SPAIATI);
             xmlw.writeAttribute(NUMERO, Integer.toString(elenco_codici_fiscali.size()));
+            System.out.println("numero codici spaiati da aggiungere: "+elenco_codici_fiscali.size());
             //Stampa codici spaiati
             for (int i=0; i<elenco_codici_fiscali.size(); i++) {
                 xmlw.writeStartElement(CODICE);
@@ -107,6 +112,7 @@ public class WriterXML {
             xmlw.close();
         } catch (Exception e) { // se trova un errore viene eseguita questa parte
             System.out.println("Errore nella scrittura codici");
+            return;
         }
     }
 }

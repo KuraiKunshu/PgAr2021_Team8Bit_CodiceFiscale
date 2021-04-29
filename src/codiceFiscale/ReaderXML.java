@@ -5,9 +5,13 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderXML {
+    private static final String STRINGAINIZIOLETTURA = "inzio lettura file: ";
+    private static final String STRINGAFINELETTURA = "fine lettura file: ";
+    private static final String ERROREREADER = "Errore nell'inizializzazione del reader:";
     private static final String PERSONA = "persona";
     private static final String NOME = "nome";
     private static final String COGNOME = "cognome";
@@ -57,6 +61,7 @@ public class ReaderXML {
         elenco_codici_fiscali = new ArrayList<CodiceFiscale>();
         elenco_codici_invalidi = new ArrayList<CodiceFiscale>();
         elenco_persone = new ArrayList<Persona>();
+        elenco_comuni=new HashMap<>();
     }
 
     /**Metodo che serve per leggere il file comuni.xml, analizzare i dati contenuti nell'xml attraverso
@@ -73,6 +78,7 @@ public class ReaderXML {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
             Comune c = null;
+            System.out.println(STRINGAINIZIOLETTURA+filename);
             while (xmlr.hasNext()) {
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
                     String nome_tag = xmlr.getLocalName();
@@ -98,8 +104,9 @@ public class ReaderXML {
                 }
                 xmlr.next();
             }
+            System.out.println(STRINGAFINELETTURA+filename);
         } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del reader:");
+            System.out.println(ERROREREADER);
             System.out.println(e.getMessage());
         }
     }
@@ -118,12 +125,8 @@ public class ReaderXML {
         try {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
-        } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del reader:");
-            System.out.println(e.getMessage());
-        }
-        CodiceFiscale c = null;
-        try{
+            CodiceFiscale c = null;
+            System.out.println(STRINGAINIZIOLETTURA+filename);
             while (xmlr.hasNext()) {
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
                     String nome_tag = xmlr.getLocalName();
@@ -141,11 +144,11 @@ public class ReaderXML {
                 }
                 xmlr.next();
             }
-        }catch (Exception e){
-            System.out.println("Errore nella lettura di codiciFiscali.xml:");
+            System.out.println(STRINGAFINELETTURA+filename);
+        } catch (Exception e) {
+            System.out.println(ERROREREADER);
             System.out.println(e.getMessage());
         }
-        return;
     }
 
     /**Metodo che serve per leggere il file inputPersone.xml e analizzare i dati contenuti nell'xml attraverso
@@ -162,12 +165,8 @@ public class ReaderXML {
         try {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
-        } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del reader:");
-            System.out.println(e.getMessage());
-        }
-        Persona p = null;
-        try{
+            Persona p = null;
+            System.out.println(STRINGAINIZIOLETTURA+filename);
             while (xmlr.hasNext()){
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT){
                     String nome_tag = xmlr.getLocalName();
@@ -207,14 +206,14 @@ public class ReaderXML {
                 else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT){
                     if (xmlr.getLocalName().equals(PERSONA))
                         p.setCf(new CodiceFiscale(p.getNome(), p.getCognome(), p.getDataDiNascita(), p.getSesso(), p.getComune().getCodice()));
-                        elenco_persone.add(p);
+                    elenco_persone.add(p);
                 }
                 xmlr.next();
             }
-        }catch (Exception e){
-            System.out.println("Errore nella lettura di inputPersone.xml:");
+            System.out.println(STRINGAFINELETTURA+filename);
+        } catch (Exception e) {
+            System.out.println(ERROREREADER);
             System.out.println(e.getMessage());
         }
-        return;
     }
 }
