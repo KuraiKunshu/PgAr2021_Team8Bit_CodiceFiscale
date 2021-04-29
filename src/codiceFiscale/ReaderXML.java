@@ -134,13 +134,14 @@ public class ReaderXML {
                         c = new CodiceFiscale();
                         xmlr.next();
                         c.setCodice(xmlr.getText());
-                        xmlr.next();
                     }
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
-                    if (xmlr.getLocalName().equals(CODICE))
-                        if (c.isValido())
+                    if (xmlr.getLocalName().equals(CODICE)){
+                        if (c.isValido()) {
                             elenco_codici_fiscali.add(c);
+                        }
                         else elenco_codici_invalidi.add(c);
+                    }
                 }
                 xmlr.next();
             }
@@ -204,9 +205,10 @@ public class ReaderXML {
                     }
                 }
                 else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT){
-                    if (xmlr.getLocalName().equals(PERSONA))
+                    if (xmlr.getLocalName().equals(PERSONA)) {
                         p.setCf(new CodiceFiscale(p.getNome(), p.getCognome(), p.getDataDiNascita(), p.getSesso(), p.getComune().getCodice()));
-                    elenco_persone.add(p);
+                        elenco_persone.add(p);
+                    }
                 }
                 xmlr.next();
             }
