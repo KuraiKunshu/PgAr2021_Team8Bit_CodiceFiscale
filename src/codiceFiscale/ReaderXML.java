@@ -72,12 +72,7 @@ public class ReaderXML {
         try {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
-        } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del reader:");
-            System.out.println(e.getMessage());
-        }
-        Comune c = null;
-        try{
+            Comune c = null;
             while (xmlr.hasNext()) {
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
                     String nome_tag = xmlr.getLocalName();
@@ -103,11 +98,10 @@ public class ReaderXML {
                 }
                 xmlr.next();
             }
-        }catch (Exception e){
-            System.out.println("Errore nella lettura di comuni.xml:");
+        } catch (Exception e) {
+            System.out.println("Errore nell'inizializzazione del reader:");
             System.out.println(e.getMessage());
         }
-        return;
     }
 
     /**Metodo che serve per leggere il file codiciFiscali.xml, analizzare i dati contenuti nell'xml attraverso
