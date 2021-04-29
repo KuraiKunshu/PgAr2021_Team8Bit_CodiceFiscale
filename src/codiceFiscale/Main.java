@@ -2,8 +2,10 @@ package codiceFiscale;
 
 public class Main {
     static public void main(String[] args){
-        System.out.println(System.getProperty("java.class.path")+"\\xmlFile\\comuni.xml");
+        String comuniFile="comuni.xml";
+        String firstPath=System.getProperty("java.class.path")+"\\xmlFile\\";
+        String comuniPath=firstPath+comuniFile;
         ReaderXML lettore = new ReaderXML();
-        lettore.LeggiXMLComuni(System.getProperty("java.class.path")+"\\xmlFile\\comuni.xml");
+        lettore.LeggiXMLComuni(comuniPath);
     }
 }
