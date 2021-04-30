@@ -6,9 +6,9 @@ public class Comune {
 
 
     /**
-     * crea l'istanza di un comune
-     * @param nome      stringa che indica il nome del comune
-     * @param codice    stringa formata dal 1 caratere dell'alfabeto e 3 numeri (tutto in formato stringa)
+     * crea un istanza dato il nome e il codice del comune
+     * @param nome      nome del comune
+     * @param codice    codice del comune (lettera + 3 numeri)
      */
     public Comune(String nome, String codice) {
         this.nome = nome;
@@ -24,7 +24,6 @@ public class Comune {
      * ritorna il nome del comune
      * @return
      */
-
     public String getNome() {
         return nome;
     }
