@@ -8,7 +8,6 @@ public class CodiceFiscale {
     private String codice;
 
     private final char UOMO='M';
-    private final char DONNA='F';
     private final int DIMENSIONE_PARTE_CF=3;
     private final int POSIZIONEVOCALI=0;
     private final int POSIZIONICONSONANTI=1;
@@ -120,10 +119,18 @@ public class CodiceFiscale {
     public CodiceFiscale() {
     }
 
+    /**
+     * ritorna il codice fiscale
+     * @return
+     */
     public String getCodice() {
         return codice;
     }
 
+    /**
+     * imposta il codice fiscale
+     * @param codice
+     */
     public void setCodice(String codice) {
         this.codice = codice;
     }
@@ -245,7 +252,6 @@ public class CodiceFiscale {
      * @param nome      il nome per intero della persona
      * @return          ritorna le prime 3 lettere del codice fiscale secondo lo standard id wikipedia
      */
-
     public String generaNomeCF(String nome){
         char[][] m=getMatriceVocaliConsonanti(nome.toUpperCase());
         if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF)return String.valueOf(m[POSIZIONICONSONANTI]);
