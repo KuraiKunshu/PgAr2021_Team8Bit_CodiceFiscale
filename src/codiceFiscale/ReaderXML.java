@@ -26,6 +26,7 @@ public class ReaderXML {
     private ArrayList<CodiceFiscale> elenco_codici_invalidi;
     private ArrayList<Persona> elenco_persone;
 
+    //getters and setters
     public Map<String, String> getElenco_comuni() {
         return elenco_comuni;
     }
@@ -55,7 +56,7 @@ public class ReaderXML {
     }
 
     /**Costruttore di ReaderXML.
-     * Inizializza gli ArrayList che verranno riempiti durante la lettura dell'xml.
+     * Inizializza gli ArrayList e la HashMap che verranno riempiti durante la lettura dell'xml.
      */
     public ReaderXML() {
         elenco_codici_fiscali = new ArrayList<CodiceFiscale>();
@@ -65,7 +66,7 @@ public class ReaderXML {
     }
 
     /**Metodo che serve per leggere il file comuni.xml, analizzare i dati contenuti nell'xml attraverso
-     * i metodi dello XMLStreamReader e creare un Map<String, String> costituito dal nome del comune
+     * i metodi dello XMLStreamReader e creare una Map<String, String> costituita dal nome del comune
      * e dal rispettivo codice.
      * @param filename il file comuni.xml che verrà fornito al metodo alla chiamata nel Main.
      */
@@ -79,29 +80,39 @@ public class ReaderXML {
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
             Comune c = null;
             System.out.println(STRINGAINIZIOLETTURA+filename);
+            //Legge il File xml fino a quando ci sono eventi di parsing disponibili
             while (xmlr.hasNext()) {
+                //Se trova un evento di tipo START.ELEMENT controlla il nome del tag dell'elemento corrente
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
                     String nome_tag = xmlr.getLocalName();
                     switch (nome_tag) {
+                        //Se il tag è "comune" allora crea un nuovo oggetto Comune
                         case COMUNE:
                             c = new Comune();
                             break;
+                        //Se il tag è "nome" allora prende il testo all'interno dell'elemento e lo assegna
+                        //all'attributo nome del Comune creato precedentemente
                         case NOME:
                             xmlr.next();
                             c.setNome(xmlr.getText());
                             xmlr.next();
                             break;
+                        //Se il tag è "codice" allora prende il testo all'interno dell'elemento e lo assegna
+                        //all'attributo codice del Comune creato precedentemente
                         case CODICE:
                             xmlr.next();
                             c.setCodice(xmlr.getText());
                             xmlr.next();
                             break;
                     }
+                //Se trova un evento di tipo END.ELEMENT controlla il nome del tag dell'elemento corrente
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
+                    //Se il tag è "comune" allora assegna alla Map elenco_comuni i valori del Comune (nome, codice)
                     if (xmlr.getLocalName().equals(COMUNE)) {
                         elenco_comuni.put(c.getNome(), c.getCodice());
                     }
                 }
+                //Passa all’evento successivo
                 xmlr.next();
             }
             System.out.println(STRINGAFINELETTURA+filename);
@@ -127,22 +138,30 @@ public class ReaderXML {
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
             CodiceFiscale c = null;
             System.out.println(STRINGAINIZIOLETTURA+filename);
+            //Legge il File xml fino a quando ci sono eventi di parsing disponibili
             while (xmlr.hasNext()) {
+                //Se trova un evento di tipo START.ELEMENT controlla il nome del tag dell'elemento corrente
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
                     String nome_tag = xmlr.getLocalName();
+                    //Se il tag è "codice" crea un nuovo oggetto CodiceFiscale e gli assegna il codice trovato all'interno dell'elemento
                     if (nome_tag.equals(CODICE)) {
                         c = new CodiceFiscale();
                         xmlr.next();
                         c.setCodice(xmlr.getText());
                     }
+                //Se trova un evento di tipo END.ELEMENT controlla il nome del tag dell'elemento corrente
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
+                    //Se il tag è "codice", aggiunge il CodiceFiscale all'ArrayList opportuno
                     if (xmlr.getLocalName().equals(CODICE)){
+                        //Se il codice fiscale è valido lo aggiunge a elenco_codici_fiscali
                         if (c.isValido()) {
                             elenco_codici_fiscali.add(c);
                         }
+                        //Se il codice fiscale NON è valido lo aggiunge a elenco_codici_invalidi
                         else elenco_codici_invalidi.add(c);
                     }
                 }
+                //Passa all’evento successivo
                 xmlr.next();
             }
             System.out.println(STRINGAFINELETTURA+filename);
@@ -154,8 +173,8 @@ public class ReaderXML {
 
     /**Metodo che serve per leggere il file inputPersone.xml e analizzare i dati contenuti nell'xml attraverso
      * i metodi dello XMLStreamReader. Crea oggetti di classe Persona che hanno come attributi id, nome, cognome, sesso,
-     * data di nascita, Comune (nome e codice) e crea per ognuno il codice fiscale. I vari oggetti
-     * Persona vengono aggiunti all'ArrayList elenco_persone, già inizializzato nel costruttore del ReaderXML.
+     * data di nascita, Comune (nome e codice attraverso la Map elenco_comuni) e crea per ognuno il codice fiscale. I vari
+     * oggetti Persona vengono aggiunti all'ArrayList elenco_persone, già inizializzato nel costruttore del ReaderXML.
      * @param filename il file inputPersone.xml che verrà fornito al metodo alla chiamata nel Main.
      */
     public void LeggiXMLInputPersone (String filename){
@@ -168,35 +187,48 @@ public class ReaderXML {
             xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
             Persona p = null;
             System.out.println(STRINGAINIZIOLETTURA+filename);
+            //Legge il File xml fino a quando ci sono eventi di parsing disponibili
             while (xmlr.hasNext()){
+                //Se trova un evento di tipo START.ELEMENT controlla il nome del tag dell'elemento corrente
                 if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT){
                     String nome_tag = xmlr.getLocalName();
                     switch (nome_tag){
+                        //Se il tag è "persona" allora crea un nuovo oggetto Persona e assegna l'id
                         case PERSONA:
                             p = new Persona();
                             p.setId(xmlr.getAttributeValue(0));
                             break;
+                        //Se il tag è "nome" allora prende il testo all'interno dell'elemento e lo assegna
+                        //all'attributo nome della Persona creata precedentemente
                         case NOME:
                             xmlr.next();
                             p.setNome(xmlr.getText());
                             xmlr.next();
                             break;
+                        //Se il tag è "cognome" allora prende il testo all'interno dell'elemento e lo assegna
+                        //all'attributo cognome della Persona
                         case COGNOME:
                             xmlr.next();
                             p.setCognome(xmlr.getText());
                             xmlr.next();
                             break;
+                        //Se il tag è "sesso" allora prende il testo all'interno dell'elemento e lo assegna
+                        //all'attributo sesso della Persona
                         case SESSO:
                             xmlr.next();
                             p.setSesso(xmlr.getText().charAt(0));
                             xmlr.next();
                             break;
+                        //Se il tag è "comune_nascita" allora prende il testo all'interno dell'elemento e utilizzando la
+                        //Map elenco_comuni, crea un nuovo Comune dotato di nome e codice e lo assegna alla Persona
                         case COMUNE_NASCITA:
                             xmlr.next();
                             String comune = xmlr.getText();
                             p.setComune(new Comune(comune, elenco_comuni.get(comune)));
                             xmlr.next();
                             break;
+                        //Se il tag è "data_nascita" allora prende il testo all'interno dell'elemento e lo assegna
+                        //all'attributo dataDiNascita della Persona
                         case DATA_NASCITA:
                             xmlr.next();
                             p.setDataDiNascita(xmlr.getText());
@@ -204,12 +236,17 @@ public class ReaderXML {
                             break;
                     }
                 }
+                //Se trova un evento di tipo END.ELEMENT controlla il nome del tag dell'elemento corrente
                 else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT){
+                    //Se il tag è "persona", crea il codice fiscale della Persona presi tutti i dati della persona, lo
+                    //assegna all'attributo cf di Persona.
                     if (xmlr.getLocalName().equals(PERSONA)) {
                         p.setCf(new CodiceFiscale(p.getNome(), p.getCognome(), p.getDataDiNascita(), p.getSesso(), p.getComune().getCodice()));
+                        //Aggiunge la persona all'ArrayList elenco.persone
                         elenco_persone.add(p);
                     }
                 }
+                //Passa all’evento successivo
                 xmlr.next();
             }
             System.out.println(STRINGAFINELETTURA+filename);
