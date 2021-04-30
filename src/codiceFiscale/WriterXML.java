@@ -14,14 +14,14 @@ public class WriterXML {
     private static final String INVALIDI = "invalidi";
     private static final String SPAIATI = "spaiati";
     private static final String PERSONE = "persone";
-    private static final String PERSONA = "persona";
+    public static final String PERSONA = "persona";
     private static final String ID = "id";
-    private static final String NOME = "nome";
-    private static final String COGNOME = "cognome";
-    private static final String SESSO = "sesso";
-    private static final String COMUNE_NASCITA = "comune_nascita";
-    private static final String DATA_NASCITA = "data_nascita";
-    private static final String CODICE = "codice";
+    public static final String NOME = "nome";
+    public static final String COGNOME = "cognome";
+    public static final String SESSO = "sesso";
+    public static final String COMUNE_NASCITA = "comune_nascita";
+    public static final String DATA_NASCITA = "data_nascita";
+    public static final String CODICE = "codice";
     private static final String ERROREWRITER = "Errore nell'inizializzazione del writer:";
 
     /**Costruttore del WriterXML
