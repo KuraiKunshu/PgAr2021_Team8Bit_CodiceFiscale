@@ -4,6 +4,7 @@ public class Comune {
     String nome;
     String codice;
 
+
     /**
      * crea un istanza dato il nome e il codice del comune
      * @param nome      nome del comune
@@ -15,7 +16,7 @@ public class Comune {
     }
 
     /**
-     * istanza vuota in caso di necessità
+     * costruttore vuoto in caso di necessita
      */
     public Comune(){}
 

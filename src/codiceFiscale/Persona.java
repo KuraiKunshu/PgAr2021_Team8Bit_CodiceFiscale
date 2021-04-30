@@ -10,7 +10,7 @@ public class Persona {
     private CodiceFiscale cf;
 
     public Persona(){}
-
+  
     /**
      * ritorna l'id della persona
      * @return
