@@ -137,7 +137,7 @@ public class ReaderXML {
                     }
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
                     if (xmlr.getLocalName().equals(CODICE)){
-                        if (c.isValido()) {
+                        if (MetodiDiControllo.isValido(c.getCodice())) {
                             elenco_codici_fiscali.add(c);
                         }
                         else elenco_codici_invalidi.add(c);

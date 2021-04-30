@@ -9,7 +9,7 @@ public class Persona {
     private String dataDiNascita;
     private Comune comune;
     private CodiceFiscale cf;
-
+  
     public Persona(){}
 
     /**
@@ -90,6 +90,7 @@ public class Persona {
         this.dataDiNascita = dataDiNascita;
     }
 
+
     /**
      * ritorna la classe comune della persona
      * @return
@@ -97,6 +98,7 @@ public class Persona {
     public Comune getComune() {
         return comune;
     }
+
 
     /**
      * imposta il comune della persona
@@ -106,6 +108,7 @@ public class Persona {
         this.comune = comune;
     }
 
+
     /**
      * ritorna la classe CodiceFiscale della persona
      * @return
@@ -113,6 +116,7 @@ public class Persona {
     public CodiceFiscale getCf() {
         return cf;
     }
+
 
     /**
      * imposta il codice fiscale di una persona
