@@ -129,7 +129,7 @@ public class CodiceFiscale {
     }
 
     /**
-     * 
+     *
      * @param lettera_per_mese : carattere alfabetico che dovrebbe indicare il mese di nascita.
      * @return true se il il carattere � effettivamente tra quelli utilizzati per indicare un mese.
      */
@@ -224,7 +224,6 @@ public class CodiceFiscale {
         if(!isLettera(codiceFiscale[11])) return false;
         if((!isNumero(codiceFiscale[12]))||(!isNumero(codiceFiscale[13]))||(!isNumero(codiceFiscale[14]))) return false;
         if(!(codiceFiscale[15]==generaCarattereDiControlloCF(this.codice.substring(0, 15)))) return false;
-
         return true;
     }
 
@@ -243,8 +242,8 @@ public class CodiceFiscale {
      * altrimenti le prime tre in ordine (per esempio: Tiziana → TZN). Se il nome non ha consonanti a sufficienza, si prendono anche le vocali;
      * in ogni caso le vocali vengono riportate dopo le consonanti (per esempio: Luca → LCU).
      * Nel caso in cui il nome abbia meno di tre lettere la parte di codice viene completata aggiungendo la lettera X.
-     * @param nome
-     * @return ritorna le prime 3 lettere del codice fiscale secondo lo standard
+     * @param nome      il nome per intero della persona
+     * @return          ritorna le prime 3 lettere del codice fiscale secondo lo standard id wikipedia
      */
 
     public String generaNomeCF(String nome){
@@ -260,8 +259,8 @@ public class CodiceFiscale {
 
     /**
      * questo metodo, data una stringa, ritorna un array bidimensionale formato da un array di consonanti e uno di vocali rispetto al nome
-     * @param nome
-     * @return
+     * @param nome      la stringa indica una la parola da suddividere in vocali e consonanti
+     * @return          ritorna una matrice formata da un array di vocali (0) e uno di consonanti (1)
      */
     public char[][] getMatriceVocaliConsonanti(String nome){
         String consonantiNome="";
@@ -271,6 +270,7 @@ public class CodiceFiscale {
             if(isVocale(nome.charAt(i)))vocaliNome+=Character.toUpperCase(nome.charAt(i));
             else consonantiNome+=Character.toUpperCase(nome.charAt(i));
         }
+
         char[][] m=new char[2][];
         m[POSIZIONEVOCALI]=vocaliNome.toCharArray();
         m[POSIZIONICONSONANTI]=consonantiNome.toCharArray();
@@ -282,10 +282,9 @@ public class CodiceFiscale {
      * Se le consonanti sono insufficienti, si prelevano anche le vocali (se sono sufficienti le consonanti si prelevano la prima, la seconda e la terza consonante),
      * sempre nel loro ordine e, comunque, le vocali vengono riportate dopo le consonanti (per esempio: Rosi → RSO). Nel caso in cui un cognome abbia meno di tre lettere,
      * la parte di codice viene completata aggiungendo la lettera X (per esempio: Fo → FOX). Per le donne, viene preso in considerazione il solo cognome da nubile.
-     * @param cognome
-     * @return
+     * @param cognome   stringa che indica il cognome della persona
+     * @return          ritorna una stringa di 3 carattero che indica il cognome secondo lo standard
      */
-
     public String generaCognomeCF(String cognome){
         char[][] m=getMatriceVocaliConsonanti(cognome.toUpperCase());
         if(m[POSIZIONICONSONANTI].length==DIMENSIONE_PARTE_CF) return String.valueOf(m[POSIZIONICONSONANTI]);
@@ -300,8 +299,8 @@ public class CodiceFiscale {
     /**
      * Anno di nascita (due cifre): si prendono le ultime due cifre dell'anno di nascita;
      * Mese di nascita (una lettera): a ogni mese dell'anno viene associata una lettera in base all'array arrayCodiceMese
-     * @param data
-     * @return ritorna una stringa formata da 2 numeri e un carattere presente in arrayCodiceMese
+     * @param data      data per intero (anno-mese-giorno)
+     * @return          ritorna una stringa formata da 2 numeri e un carattere presente in arrayCodiceMese
      */
     public String generaDataDiNascitaCF(String data){
         return data.substring(2,4)+String.valueOf(arrayCodiceMese[Integer.parseInt(data.substring(5,7))-1]);
@@ -311,9 +310,9 @@ public class CodiceFiscale {
      * Si prendono le due cifre del giorno di nascita (se è compreso tra 1 e 9 si pone uno zero come prima cifra);
      * per i soggetti di sesso femminile, a tale cifra va sommato il numero 40. In questo modo il campo contiene la doppia informazione giorno di nascita e sesso.
      * Avremo pertanto la seguente casistica: i maschi avranno il giorno con cifra da 01 a 31, mentre per le donne la cifra relativa al giorno sarà da 41 a 71.
-     * @param data
-     * @param sesso
-     * @return ritorna una stringa formata da 2 cifre
+     * @param data      data per intero (anno-mese-giorno)
+     * @param sesso     un char che indica il sesso di una persona ('M' o 'F')
+     * @return          ritorna una stringa formata da 2 cifre
      */
     public String generaGiornoESessoCF(String data, char sesso){
         String d=data.substring(data.length()-2);
