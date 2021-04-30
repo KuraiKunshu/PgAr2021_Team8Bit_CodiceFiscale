@@ -24,10 +24,18 @@ public class CodiceFiscale {
     public CodiceFiscale() {
     }
 
+    /**
+     * ritorna il codice fiscale
+     * @return
+     */
     public String getCodice() {
         return codice;
     }
 
+    /**
+     * imposta il codice fiscale
+     * @param codice
+     */
     public void setCodice(String codice) {
         this.codice = codice;
     }
