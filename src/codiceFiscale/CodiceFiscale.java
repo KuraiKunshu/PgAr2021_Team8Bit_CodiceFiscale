@@ -185,8 +185,8 @@ public class CodiceFiscale {
 
     /**
      * 
-     * @param carattere_alfabeto : carattere_alfabeto : � il carattere del codice fiscale che dobbiamo controllare se sia una consonante o meno.
-     * @return true se il carattere � effettivamente una consonante;
+     * @param carattere_alfabeto : carattere_alfabeto : il carattere del codice fiscale che dobbiamo controllare se sia una consonante o meno.
+     * @return true se il carattere è effettivamente una consonante;
      */
     public boolean isConsonante(char carattere_alfabeto) {
     	for(int i = 0; i<consonanti.length;i++) {
@@ -198,7 +198,7 @@ public class CodiceFiscale {
     /**
      * 
      * @param carattere : carattere del codice fiscale da controllare se sia una lettera o no.
-     * @return true se � una vocale o una consonante, e quindi una lettera.
+     * @return true se è una vocale o una consonante, e quindi una lettera.
      */
     public boolean isLettera(char carattere) {
     	if(isVocale(carattere)) return true;
