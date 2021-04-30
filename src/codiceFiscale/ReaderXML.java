@@ -153,8 +153,7 @@ public class ReaderXML {
                 } else if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT) {
                     //Se il tag è "codice", aggiunge il CodiceFiscale all'ArrayList opportuno
                     if (xmlr.getLocalName().equals(CODICE)){
-                        //Se il codice fiscale è valido lo aggiunge a elenco_codici_fiscali
-                        if (c.isValido()) {
+                        if (MetodiDiControllo.isValido(c.getCodice())) {
                             elenco_codici_fiscali.add(c);
                         }
                         //Se il codice fiscale NON è valido lo aggiunge a elenco_codici_invalidi
